@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midnight Confetti</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            font-family: sans-serif;
+        }
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Waiting for Midnight...</h1>
+
+    <!-- Include the confetti library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        function checkMidnight() {
+            const now = new Date();
+            if (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+                launchConfetti();
+            }
+        }
+
+        function launchConfetti() {
+            const duration = 10 * 1000; // Confetti for 10 seconds
+            const animationEnd = Date.now() + duration;
+
+            const confettiInterval = setInterval(() => {
+                if (Date.now() > animationEnd) {
+                    clearInterval(confettiInterval);
+                    return;
+                }
+
+                confetti({
+                    particleCount: 5,
+                    startVelocity: 30,
+                    spread: 360,
+                    ticks: 60,
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random() - 0.2
+                    }
+                });
+            }, 250);
+        }
+
+        // Check the time every second
+        setInterval(checkMidnight, 1000);
+    </script>
+</body>
+</html>
