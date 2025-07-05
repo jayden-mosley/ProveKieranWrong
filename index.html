@@ -17,18 +17,46 @@
             color: white;
             font-family: sans-serif;
         }
-        h1 {
+        h1, h2 {
             text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>Waiting for Midnight...</h1>
+    <h1>EFM Fleet Management<h1>
+    <h2>Waiting for Midnight...</h2>
 
     <!-- Include the confetti library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <script>
+        // Set the target date and time
+    const targetDate = new Date("2025-12-31T23:59:59").getTime();
+
+    // Update the countdown every second
+    const countdownInterval = setInterval(() => {
+      const now = new Date().getTime(); // Get the current time
+      const timeLeft = targetDate - now; // Calculate the time difference
+
+      if (timeLeft > 0) {
+        // Calculate days, hours, minutes, and seconds
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        // Display the countdown
+        document.getElementById("countdown").textContent = 
+          `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      } else {
+        // Stop the countdown and display a message
+        clearInterval(countdownInterval);
+        document.getElementById("countdown").textContent = "Game Over!";
+      }
+    }, 1000);
+
+
+        
         function checkMidnight() {
             const now = new Date();
             if (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() === 0) {
@@ -37,7 +65,7 @@
         }
 
         function launchConfetti() {
-            const duration = 10 * 1000; // Confetti for 10 seconds
+            const duration = 30 * 1000; // Confetti for 10 seconds
             const animationEnd = Date.now() + duration;
 
             const confettiInterval = setInterval(() => {
