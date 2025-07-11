@@ -1,101 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Midnight Confetti</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #121212;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: white;
-            font-family: sans-serif;
-        }
-        h1 {
-            text-align: top;
-        }
-        h2 {
-            text-align: center;
-        }
-         #countdown {
-            font-size: 2rem;
-            color: #333;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Midnight Confetti</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #111;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .logo {
+      max-width: 250px;
+      margin-bottom: 20px;
+    }
+
+    .timer {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .message {
+      font-size: 1.2rem;
+      opacity: 0.7;
+    }
+  </style>
 </head>
 <body>
-    <h1>EFM Fleet Management<h1>
-    <h2>Waiting for Midnight...</h2>
 
-    <!-- Include the confetti library -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
-    <script>
-        // Set the target date and time
-    const targetDate = new Date("2025-12-31T23:59:59").getTime();
+  <!-- Replace this image with your actual logo -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Manchester_Coat_of_Arms.svg/1024px-Manchester_Coat_of_Arms.svg.png" alt="Manchester EFM" class="logo" />
 
-    // Update the countdown every second
-    const countdownInterval = setInterval(() => {
-      const now = new Date().getTime(); // Get the current time
-      const timeLeft = targetDate - now; // Calculate the time difference
+  <div class="timer" id="countdown">Loading countdown...</div>
+  <div class="message">Confetti will explode at midnight 🎉</div>
 
-      if (timeLeft > 0) {
-        // Calculate days, hours, minutes, and seconds
-        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+  <!-- Confetti library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-        // Display the countdown
-        document.getElementById("countdown").textContent = 
-          `${days}d ${hours}h ${minutes}m ${seconds}s`;
-      } else {
-        // Stop the countdown and display a message
-        clearInterval(countdownInterval);
-        document.getElementById("countdown").textContent = "Game Over!";
+  <script>
+    function updateCountdown() {
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setHours(24, 0, 0, 0); // Next midnight
+
+      const diff = midnight - now;
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById('countdown').textContent = 
+        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+      // Trigger confetti at midnight
+      if (hours === 0 && minutes === 0 && seconds === 0) {
+        launchConfetti();
       }
-    }, 1000);
+    }
 
+    function launchConfetti() {
+      const duration = 10 * 1000;
+      const end = Date.now() + duration;
 
-        
-        function checkMidnight() {
-            const now = new Date();
-            if (now.getHours() === 0 && now.getMinutes() === 0 && now.getSeconds() === 0) {
-                launchConfetti();
-            }
+      const interval = setInterval(() => {
+        if (Date.now() > end) {
+          clearInterval(interval);
+          return;
         }
 
-        function launchConfetti() {
-            const duration = 30 * 1000; // Confetti for 10 seconds
-            const animationEnd = Date.now() + duration;
+        confetti({
+          particleCount: 7,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+        });
+        confetti({
+          particleCount: 7,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+        });
+      }, 250);
+    }
 
-            const confettiInterval = setInterval(() => {
-                if (Date.now() > animationEnd) {
-                    clearInterval(confettiInterval);
-                    return;
-                }
-
-                confetti({
-                    particleCount: 5,
-                    startVelocity: 30,
-                    spread: 360,
-                    ticks: 60,
-                    origin: {
-                        x: Math.random(),
-                        y: Math.random() - 0.2
-                    }
-                });
-            }, 250);
-        }
-
-        // Check the time every second
-        setInterval(checkMidnight, 1000);
-    </script>
+    // Start countdown
+    setInterval(updateCountdown, 1000);
+    updateCountdown(); // run immediately
+  </script>
 </body>
 </html>
